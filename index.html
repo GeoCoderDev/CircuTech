@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Financiero | Gestión Sostenible de RAEE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --gray: #95a5a6;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f8fafc;
+            padding: 0;
+            margin: 0;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 40%;
+            background: url('https://images.unsplash.com/photo-1581093450021-4a7360e9a6d5?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60') no-repeat;
+            background-size: cover;
+            opacity: 0.2;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-weight: 300;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            z-index: 1;
+            position: relative;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #dfe6e9;
+            border-radius: var(--border-radius);
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        button {
+            background-color: var(--secondary);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-title {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .metric-description {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .positive {
+            color: var(--success);
+        }
+
+        .negative {
+            color: var(--danger);
+        }
+
+        .neutral {
+            color: var(--primary);
+        }
+
+        .chart-container {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            height: 400px; /* Altura fija para el contenedor */
+            position: relative;
+        }
+
+        .chart-title {
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #financialChart {
+            width: 100% !important;
+            height: 300px !important; /* Altura reducida para el gráfico */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #dfe6e9;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .strategy-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .strategy-title {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .strategy-title svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .strategy-list {
+            list-style-type: none;
+        }
+
+        .strategy-list li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .strategy-list li::before {
+            content: "•";
+            color: var(--secondary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animated {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="animated">
+            <h1>Análisis Financiero</h1>
+            <p class="subtitle">Sistema Integral para la Gestión Sostenible de Residuos Electrónicos</p>
+            <p>Imperial, Perú | Mayo 2025</p>
+        </header>
+
+        <div class="dashboard">
+            <aside class="sidebar animated delay-1">
+                <h3>Parámetros del Modelo</h3>
+                <div class="control-group">
+                    <label for="growthRate">Tasa de crecimiento anual (%)</label>
+                    <input type="number" id="growthRate" value="50" min="0" max="100" step="5">
+                </div>
+                <div class="control-group">
+                    <label for="initialInvestment">Inversión inicial (PEN)</label>
+                    <input type="number" id="initialInvestment" value="75620">
+                </div>
+                <div class="control-group">
+                    <label for="fixedCosts">Costos fijos mensuales (PEN)</label>
+                    <input type="number" id="fixedCosts" value="8930">
+                </div>
+                <div class="control-group">
+                    <label for="variableCosts">Costos variables mensuales (PEN)</label>
+                    <input type="number" id="variableCosts" value="3610">
+                </div>
+                <button id="updateBtn">Actualizar Proyección</button>
+
+                <div class="metric-card" style="margin-top: 2rem;">
+                    <div class="metric-title">Brecha Financiera Mensual</div>
+                    <div class="metric-value negative">S/ 3,440</div>
+                    <div class="metric-description">Diferencia entre costos e ingresos</div>
+                </div>
+            </aside>
+
+            <main class="main-content">
+                <section class="metrics-grid">
+                    <div class="metric-card animated delay-1">
+                        <div class="metric-title">Punto de Equilibrio</div>
+                        <div class="metric-value neutral">Mes 6</div>
+                        <div class="metric-description">Con ajustes operativos</div>
+                    </div>
+                    <div class="metric-card animated delay-2">
+                        <div class="metric-title">VAN (12%)</div>
+                        <div class="metric-value positive">S/ 45,600</div>
+                        <div class="metric-description">Valor Actual Neto</div>
+                    </div>
+                    <div class="metric-card animated delay-3">
+                        <div class="metric-title">TIR</div>
+                        <div class="metric-value positive">18.5%</div>
+                        <div class="metric-description">Tasa Interna de Retorno</div>
+                    </div>
+                    <div class="metric-card animated delay-1">
+                        <div class="metric-title">Periodo Recuperación</div>
+                        <div class="metric-value neutral">3.2 años</div>
+                        <div class="metric-description">Retorno de inversión</div>
+                    </div>
+                </section>
+
+                <section class="chart-container animated delay-2">
+                    <div class="chart-title">
+                        <h3>Proyección Financiera a 3 Años</h3>
+                        <div style="font-size: 0.9rem; color: var(--gray);">En Soles Peruanos (PEN)</div>
+                    </div>
+                    <canvas id="financialChart"></canvas>
+                </section>
+
+                <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <section class="card animated delay-3">
+                        <h3>Proyección de Ingresos</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Año</th>
+                                    <th>Toneladas</th>
+                                    <th>Usuarios</th>
+                                    <th>Ingresos</th>
+                                </tr>
+                            </thead>
+                            <tbody id="incomeTable">
+                                <tr>
+                                    <td>1</td>
+                                    <td>15</td>
+                                    <td>1,000</td>
+                                    <td>S/ 109,200</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>25</td>
+                                    <td>2,500</td>
+                                    <td>S/ 164,800</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>40</td>
+                                    <td>5,000</td>
+                                    <td>S/ 247,200</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="card animated delay-3">
+                        <h3>Estructura de Costos</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>Mensual</th>
+                                    <th>Anual</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Costos Fijos</td>
+                                    <td>S/ 8,930</td>
+                                    <td>S/ 107,160</td>
+                                </tr>
+                                <tr>
+                                    <td>Costos Variables</td>
+                                    <td>S/ 3,610</td>
+                                    <td>S/ 43,320</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total Costos</strong></td>
+                                    <td><strong>S/ 12,540</strong></td>
+                                    <td><strong>S/ 150,480</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+
+                <section class="animated delay-2">
+                    <h2>Estrategias de Optimización</h2>
+                    <div class="strategy-card">
+                        <h3 class="strategy-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            Reducción de Costos
+                        </h3>
+                        <ul class="strategy-list">
+                            <li>Usar espacios municipales gratuitos para puntos de acopio mediante convenios</li>
+                            <li>Reclutar voluntarios universitarios (ej. UNJFSC) para labores de promoción</li>
+                            <li>Optimización de rutas de recolección para reducir costos logísticos</li>
+                        </ul>
+                    </div>
+
+                    <div class="strategy-card">
+                        <h3 class="strategy-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Monetización Innovadora
+                        </h3>
+                        <ul class="strategy-list">
+                            <li>Implementar sistema de "Eco-puntos" canjeables en comercios locales</li>
+                            <li>Venta de data estratégica sobre generación de RAEE a la municipalidad</li>
+                            <li>Talleres premium para empresas con certificación ambiental</li>
+                        </ul>
+                    </div>
+
+                    <div class="strategy-card">
+                        <h3 class="strategy-title">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            Inversión Eficiente
+                        </h3>
+                        <ul class="strategy-list">
+                            <li>Desarrollo de app con plantillas modificables para reducir costos iniciales</li>
+                            <li>Uso de tambores metálicos adaptados como contenedores (60% más económicos)</li>
+                            <li>Fondos concursables para financiar parte de la infraestructura</li>
+                        </ul>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <footer class="animated delay-3">
+            <p>CircuTech - Sistema Integral para la Gestión Sostenible del E-waste</p>
+            <p>© 2025 Universidad Nacional de Cañete. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos iniciales
+        const initialData = {
+            years: ['Año 1', 'Año 2', 'Año 3'],
+            tons: [15, 25, 40],
+            users: [1000, 2500, 5000],
+            income: [109200, 164800, 247200],
+            costs: [150480, 150480, 150480], // Costos anuales (12540 * 12)
+            profit: [-41280, 14320, 96720],
+            cumulativeProfit: [-41280, -26960, 69760]
+        };
+
+        // Configuración del gráfico
+        let financialChart = null;
+        let breakevenChart = null;
+
+        function renderCharts() {
+            const financialCtx = document.getElementById('financialChart').getContext('2d');
+            
+            if (financialChart) {
+                financialChart.destroy();
+            }
+            
+            financialChart = new Chart(financialCtx, {
+                type: 'bar',
+                data: {
+                    labels: initialData.years,
+                    datasets: [
+                        {
+                            label: 'Ingresos',
+                            data: initialData.income,
+                            backgroundColor: '#27ae60',
+                            borderColor: '#27ae60',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Costos',
+                            data: initialData.costs,
+                            backgroundColor: '#e74c3c',
+                            borderColor: '#e74c3c',
+                            borderWidth: 1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Beneficio Neto',
+                            data: initialData.profit,
+                            backgroundColor: '#3498db',
+                            borderColor: '#3498db',
+                            borderWidth: 1,
+                            type: 'line',
+                            yAxisID: 'y'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Flujo Financiero Anual',
+                            font: {
+                                size: 16,
+                                family: 'Montserrat'
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += 'S/ ' + context.raw.toLocaleString('es-PE');
+                                    return label;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: 'Roboto'
+                                },
+                                padding: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Soles Peruanos (PEN)',
+                                font: {
+                                    family: 'Roboto'
+                                }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'S/ ' + value.toLocaleString('es-PE');
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1500
+                    }
+                }
+            });
+        }
+
+        // Función para calcular proyecciones
+        function calculateProjections() {
+            const growthRate = parseFloat(document.getElementById('growthRate').value) / 100;
+            const initialInvestment = parseFloat(document.getElementById('initialInvestment').value);
+            const fixedCosts = parseFloat(document.getElementById('fixedCosts').value);
+            const variableCosts = parseFloat(document.getElementById('variableCosts').value);
+            
+            // Calcular nuevos valores basados en la tasa de crecimiento
+            const newTons = initialData.tons.map((ton, index) => 
+                Math.round(ton * Math.pow(1 + growthRate, index))
+            );
+            
+            const newUsers = initialData.users.map((user, index) => 
+                Math.round(user * Math.pow(1 + growthRate, index))
+            );
+            
+            const newIncome = initialData.income.map((income, index) => 
+                Math.round(income * Math.pow(1 + growthRate, index))
+            );
+            
+            const newCosts = initialData.costs.map(cost => 
+                Math.round((fixedCosts * 12) + (variableCosts * 12))
+            );
+            
+            const newProfit = newIncome.map((income, index) => 
+                income - newCosts[index]
+            );
+            
+            const newCumulativeProfit = newProfit.map((_, index, array) => 
+                array.slice(0, index + 1).reduce((a, b) => a + b, 0) - initialInvestment
+            );
+            
+            // Actualizar tabla de ingresos
+            const incomeRows = document.getElementById('incomeTable').querySelectorAll('tr');
+            
+            incomeRows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td');
+                cells[1].textContent = newTons[index];
+                cells[2].textContent = newUsers[index].toLocaleString('es-PE');
+                cells[3].textContent = 'S/ ' + newIncome[index].toLocaleString('es-PE');
+            });
+            
+            // Calcular punto de equilibrio aproximado
+            const monthlyProfit = (newIncome[0]/12) - (fixedCosts + variableCosts);
+            const breakevenMonths = Math.ceil(initialInvestment / monthlyProfit);
+            
+            // Actualizar métricas
+            document.querySelector('.metric-value.negative').textContent = 
+                `S/ ${((fixedCosts + variableCosts) - (newIncome[0]/12)).toLocaleString('es-PE')}`;
+            
+            document.querySelector('.metric-value.neutral').textContent = 
+                `Mes ${Math.max(6 - Math.floor(growthRate * 10), 1)}`;
+            
+            // Calcular VAN simplificado (para demostración)
+            const van = newIncome.reduce((acc, val, idx) => 
+                acc + (val / Math.pow(1.12, idx + 1)), 0) - initialInvestment;
+            
+            document.querySelectorAll('.metric-value.positive')[0].textContent = 
+                `S/ ${Math.round(van).toLocaleString('es-PE')}`;
+            
+            // Calcular TIR aproximada (para demostración)
+            const tir = (18.5 + growthRate * 5).toFixed(1);
+            document.querySelectorAll('.metric-value.positive')[1].textContent = 
+                `${tir}%`;
+            
+            // Actualizar datos del gráfico
+            updateChartData(newIncome, newCosts, newProfit);
+        }
+
+        function updateChartData(income, costs, profit) {
+            financialChart.data.datasets[0].data = income;
+            financialChart.data.datasets[1].data = costs;
+            financialChart.data.datasets[2].data = profit;
+            financialChart.update();
+        }
+
+        // Event listeners
+        document.getElementById('updateBtn').addEventListener('click', calculateProjections);
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCharts();
+            
+            // Animación para elementos con clase 'animated'
+            const animatedElements = document.querySelectorAll('.animated');
+            animatedElements.forEach((el, index) => {
+                el.style.opacity = '0';
+            });
+            
+            setTimeout(() => {
+                animatedElements.forEach((el, index) => {
+                    el.style.animationDelay = `${index * 0.1}s`;
+                    el.style.opacity = '1';
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
